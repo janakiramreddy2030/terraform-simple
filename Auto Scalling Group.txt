@@ -1,0 +1,42 @@
+# create autoscaling
+
+resource "aws_launch_configuration" "My_Asg" {
+  name_prefix   = "terraform-lc-example"
+  image_id      = "ami-0be2609ba883822ec"
+  instance_type = "t2.micro"
+  key_name = "jani"
+  user_data = file("apache.sh")
+  security_groups = [ aws_security_group.My_SG.id ]
+}
+
+resource "aws_autoscaling_group" "app_asg" {
+  name                      = "myautoscale"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 2
+  launch_configuration      = aws_launch_configuration.My_Asg.name
+  vpc_zone_identifier       = aws_subnet.Mysubnet.*.id
+
+  tag {
+    key                 = "Janiki"
+    value               = "Jani-asg"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "Janiki"
+    value               = "Jani-asg"
+    propagate_at_launch = true
+  }
+
+  timeouts {
+    delete = "15m"
+  }
+
+  tag {
+    key                 = "lorem"
+    value               = "ipsum"
+    propagate_at_launch = false
+  }
+}

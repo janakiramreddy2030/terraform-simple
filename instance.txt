@@ -1,0 +1,14 @@
+# create ec2 instance
+
+resource "aws_instance" "Jani" {
+    ami 		= "ami-0be2609ba883822ec"
+    instance_type 	="t2.micro" 
+    security group_id 	=[aws_security_group.My_SG.id]
+    subnet_id 		= aws_subnet.Mysubnet.id
+    key_name 		= "jani"
+    user_data 		= file("apache.sh")
+
+    tags = {
+      "Name" = "Jani"
+    }
+}
